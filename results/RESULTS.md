@@ -43,3 +43,29 @@
 | section+header | Dense (MiniLM) | 7.1 | 15.7 | 10.9 | 10.8 | 11.8 |
 | section+header | Hybrid (RRF) | 9.9 | 24.1 | 15.8 | 15.9 | 18.5 |
 | section+header | Hybrid + cross-encoder | 11.9 | 28.1 | 18.8 | 18.1 | 21.7 |
+
+## Rerank depth: quality vs latency (section+header chunks)
+
+| Scope | Candidates reranked | Hit@5 | MRR@10 | nDCG@10 | p50 ms | p95 ms |
+|---|---|---|---|---|---|---|
+| in-doc | 5 | 72.2 | 49.6 | 52.3 | 94.0 | 124.1 |
+| corpus | 5 | 24.1 | 18.2 | 17.2 | 93.0 | 126.0 |
+| in-doc | 10 | 76.7 | 50.5 | 53.0 | 174.6 | 216.2 |
+| corpus | 10 | 28.5 | 18.4 | 17.5 | 174.3 | 221.6 |
+| in-doc | 20 | 75.9 | 50.6 | 53.3 | 350.2 | 416.6 |
+| corpus | 20 | 28.1 | 18.8 | 18.1 | 354.1 | 416.7 |
+| in-doc | 30 | 75.6 | 50.5 | 53.2 | 522.8 | 635.8 |
+| corpus | 30 | 28.8 | 19.3 | 18.7 | 566.1 | 642.1 |
+
+## End-to-end query latency (200 queries, 7953 chunks indexed, cross-encoder reranks top 10, one query at a time, embedding the query included)
+
+| Retriever | Scope | p50 ms | p95 ms |
+|---|---|---|---|
+| BM25 | in-doc | 1.2 | 1.5 |
+| BM25 | corpus | 1.1 | 1.3 |
+| Dense (MiniLM) | in-doc | 5.8 | 7.5 |
+| Dense (MiniLM) | corpus | 6.2 | 9.1 |
+| Hybrid (RRF) | in-doc | 7.9 | 10.2 |
+| Hybrid (RRF) | corpus | 8.4 | 13.2 |
+| Hybrid + cross-encoder | in-doc | 191.0 | 232.9 |
+| Hybrid + cross-encoder | corpus | 190.4 | 233.8 |

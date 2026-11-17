@@ -209,7 +209,13 @@ def main() -> None:
                 "mean_ms": round(float(np.mean(ts)), 1),
             }
             print(f"latency {scope:7s} {mode:14s} {latency[f'{scope}/{mode}']}", flush=True)
-    results["latency"] = {"chunker": lat_chunker, "n_chunks": len(flat), "n_queries": len(lq), **latency}
+    results["latency"] = {
+        "chunker": lat_chunker,
+        "rerank_top": eng.config.rerank_top,
+        "n_chunks": len(flat),
+        "n_queries": len(lq),
+        **latency,
+    }
 
     save()
     print(f"wrote {out_file}")

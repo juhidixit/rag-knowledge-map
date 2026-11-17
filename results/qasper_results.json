@@ -442,5 +442,108 @@
       }
     }
   },
-  "rerank_sweep": {}
+  "rerank_sweep": {
+    "in-doc/top5": {
+      "hit@5": 0.7218,
+      "mrr@10": 0.4963,
+      "ndcg@10": 0.5233,
+      "p50_ms": 94.0,
+      "p95_ms": 124.1
+    },
+    "corpus/top5": {
+      "hit@5": 0.241,
+      "mrr@10": 0.1822,
+      "ndcg@10": 0.1719,
+      "p50_ms": 93.0,
+      "p95_ms": 126.0
+    },
+    "in-doc/top10": {
+      "hit@5": 0.7669,
+      "mrr@10": 0.5053,
+      "ndcg@10": 0.5296,
+      "p50_ms": 174.6,
+      "p95_ms": 216.2
+    },
+    "corpus/top10": {
+      "hit@5": 0.2849,
+      "mrr@10": 0.1836,
+      "ndcg@10": 0.175,
+      "p50_ms": 174.3,
+      "p95_ms": 221.6
+    },
+    "in-doc/top20": {
+      "hit@5": 0.759,
+      "mrr@10": 0.506,
+      "ndcg@10": 0.5327,
+      "p50_ms": 350.2,
+      "p95_ms": 416.6
+    },
+    "corpus/top20": {
+      "hit@5": 0.2815,
+      "mrr@10": 0.1877,
+      "ndcg@10": 0.1808,
+      "p50_ms": 354.1,
+      "p95_ms": 416.7
+    },
+    "in-doc/top30": {
+      "hit@5": 0.7556,
+      "mrr@10": 0.5054,
+      "ndcg@10": 0.532,
+      "p50_ms": 522.8,
+      "p95_ms": 635.8
+    },
+    "corpus/top30": {
+      "hit@5": 0.2883,
+      "mrr@10": 0.1926,
+      "ndcg@10": 0.1867,
+      "p50_ms": 566.1,
+      "p95_ms": 642.1
+    }
+  },
+  "latency": {
+    "chunker": "section+header",
+    "rerank_top": 10,
+    "n_chunks": 7953,
+    "n_queries": 200,
+    "corpus/bm25": {
+      "p50_ms": 1.1,
+      "p95_ms": 1.3,
+      "mean_ms": 1.1
+    },
+    "in-doc/bm25": {
+      "p50_ms": 1.2,
+      "p95_ms": 1.5,
+      "mean_ms": 1.2
+    },
+    "corpus/dense": {
+      "p50_ms": 6.2,
+      "p95_ms": 9.1,
+      "mean_ms": 6.7
+    },
+    "in-doc/dense": {
+      "p50_ms": 5.8,
+      "p95_ms": 7.5,
+      "mean_ms": 6.1
+    },
+    "corpus/hybrid": {
+      "p50_ms": 8.4,
+      "p95_ms": 13.2,
+      "mean_ms": 9.3
+    },
+    "in-doc/hybrid": {
+      "p50_ms": 7.9,
+      "p95_ms": 10.2,
+      "mean_ms": 8.3
+    },
+    "corpus/hybrid_rerank": {
+      "p50_ms": 190.4,
+      "p95_ms": 233.8,
+      "mean_ms": 194.9
+    },
+    "in-doc/hybrid_rerank": {
+      "p50_ms": 191.0,
+      "p95_ms": 232.9,
+      "mean_ms": 195.1
+    }
+  }
 }

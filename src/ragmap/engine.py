@@ -24,7 +24,7 @@ class EngineConfig:
     embed_model: str | None = None
     rerank_model: str | None = DEFAULT_RERANK_MODEL
     candidates: int = 50  # per retriever, before fusion
-    rerank_top: int = 20  # fused candidates passed to the cross-encoder
+    rerank_top: int = 10  # fused candidates passed to the cross-encoder (see rerank-depth sweep)
     rrf_k: int = 60
     vector_store: str = os.environ.get("RAGMAP_VECTOR_STORE", "faiss")
     pg_dsn: str | None = os.environ.get("RAGMAP_PG_DSN")

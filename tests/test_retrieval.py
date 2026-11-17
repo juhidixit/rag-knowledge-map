@@ -64,6 +64,6 @@ def test_duplicate_document_is_not_reindexed(engine, doc):
 def test_rerank_depth_smaller_than_k_keeps_fused_tail(engine):
     engine.config.rerank_top = 1
     hits = engine.search("cooling battery temperature", k=4, mode="hybrid_rerank")["hits"]
-    engine.config.rerank_top = 20
+    engine.config.rerank_top = 10
     assert len(hits) == 4
     assert "rerank" in hits[0].scores and all("rerank" not in h.scores for h in hits[1:])

@@ -65,7 +65,8 @@ def main(path: str = "results/qasper_results.json") -> None:
     if r.get("latency"):
         lat = r["latency"]
         out += [
-            f"## End-to-end query latency ({lat['n_queries']} queries, {lat['n_chunks']} chunks indexed, one query at a time)",
+            f"## End-to-end query latency ({lat['n_queries']} queries, {lat['n_chunks']} chunks indexed, "
+            f"cross-encoder reranks top {lat.get('rerank_top', '?')}, one query at a time, embedding the query included)",
             "",
             "| Retriever | Scope | p50 ms | p95 ms |",
             "|---|---|---|---|",
