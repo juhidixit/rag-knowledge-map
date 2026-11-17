@@ -1,0 +1,9 @@
+results/cache/
+__pycache__/
+*.egg-info/
+.venv/
+data/
+models/
+.pytest_cache/
+.ruff_cache/
+*.onnx
