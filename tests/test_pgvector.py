@@ -1,7 +1,7 @@
 """Integration test for the Postgres/pgvector store. Runs only when RAGMAP_TEST_PG_DSN is set, e.g.
 
-    docker run -d -e POSTGRES_USER=ragmap -e POSTGRES_PASSWORD=ragmap -e POSTGRES_DB=ragmap -p 5432:5432 pgvector/pgvector:pg16
-    RAGMAP_TEST_PG_DSN=postgresql://ragmap:ragmap@localhost:5432/ragmap pytest tests/test_pgvector.py
+docker run -d -e POSTGRES_USER=ragmap -e POSTGRES_PASSWORD=ragmap -e POSTGRES_DB=ragmap -p 5432:5432 pgvector/pgvector:pg16
+RAGMAP_TEST_PG_DSN=postgresql://ragmap:ragmap@localhost:5432/ragmap pytest tests/test_pgvector.py
 """
 
 import os

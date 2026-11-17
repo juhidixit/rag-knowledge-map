@@ -16,7 +16,10 @@ def pct(x: float) -> str:
 def main(path: str = "results/qasper_results.json") -> None:
     r = json.loads(Path(path).read_text())
     m = r["meta"]
-    hub = {"all-MiniLM-L6-v2": "sentence-transformers/all-MiniLM-L6-v2", "ms-marco-MiniLM-L-6-v2": "cross-encoder/ms-marco-MiniLM-L-6-v2"}
+    hub = {
+        "all-MiniLM-L6-v2": "sentence-transformers/all-MiniLM-L6-v2",
+        "ms-marco-MiniLM-L-6-v2": "cross-encoder/ms-marco-MiniLM-L-6-v2",
+    }
     for key in ("embed_model", "rerank_model"):  # local copies of the same Hugging Face weights
         m[key] = hub.get(Path(m[key]).name, m[key])
     out = [
@@ -27,8 +30,16 @@ def main(path: str = "results/qasper_results.json") -> None:
         f"Hardware: {m['machine']}, CPU only. All numbers in %, higher is better.",
         "",
     ]
-    for scope, title in (("in-doc", "Search inside the paper (chat-with-a-PDF)"), ("corpus", "Search across all 281 papers")):
-        out += [f"## {title}", "", "| Chunking | Retriever | Hit@1 | Hit@5 | MRR@10 | nDCG@10 | Evidence recall@5 |", "|---|---|---|---|---|---|---|"]
+    for scope, title in (
+        ("in-doc", "Search inside the paper (chat-with-a-PDF)"),
+        ("corpus", "Search across all 281 papers"),
+    ):
+        out += [
+            f"## {title}",
+            "",
+            "| Chunking | Retriever | Hit@1 | Hit@5 | MRR@10 | nDCG@10 | Evidence recall@5 |",
+            "|---|---|---|---|---|---|---|",
+        ]
         for cname, run in r["runs"].items():
             for mode, label in MODES.items():
                 a = run.get(f"{scope}/{mode}")

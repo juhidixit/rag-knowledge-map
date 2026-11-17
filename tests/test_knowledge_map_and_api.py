@@ -2,10 +2,10 @@ import pymupdf
 import pytest
 from fastapi.testclient import TestClient
 
+from ragmap import knowledge_map as km_mod
 from ragmap.api import create_app
 from ragmap.chunking import chunk_document
 from ragmap.ingest import parse_pdf
-from ragmap import knowledge_map as km_mod
 from ragmap.knowledge_map import build_knowledge_map
 
 from .conftest import SAMPLE
