@@ -29,3 +29,26 @@ jobs:
           ruff format --check src tests eval scripts
       - name: Test
         run: pytest -q
+
+  pgvector:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: ragmap
+          POSTGRES_PASSWORD: ragmap
+          POSTGRES_DB: ragmap
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ragmap" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e ".[dev,pgvector]"
+      - run: pytest -q tests/test_pgvector.py
+        env:
+          RAGMAP_TEST_PG_DSN: postgresql://ragmap:ragmap@localhost:5432/ragmap
