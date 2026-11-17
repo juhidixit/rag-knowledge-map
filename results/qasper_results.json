@@ -158,6 +158,45 @@
         "mrr@10": 0.4317,
         "ndcg@10": 0.4614,
         "seconds": 8.2
+      },
+      "in-doc/hybrid_rerank": {
+        "hit@1": 0.3164,
+        "ev_recall@1": 0.2284,
+        "hit@3": 0.5912,
+        "ev_recall@3": 0.4489,
+        "hit@5": 0.7173,
+        "ev_recall@5": 0.5685,
+        "hit@10": 0.8727,
+        "ev_recall@10": 0.7537,
+        "mrr@10": 0.4834,
+        "ndcg@10": 0.5095,
+        "seconds": 282.8
+      },
+      "corpus/bm25": {
+        "hit@1": 0.0676,
+        "ev_recall@1": 0.041,
+        "hit@3": 0.1588,
+        "ev_recall@3": 0.1076,
+        "hit@5": 0.1959,
+        "ev_recall@5": 0.1402,
+        "hit@10": 0.2736,
+        "ev_recall@10": 0.206,
+        "mrr@10": 0.1264,
+        "ndcg@10": 0.1275,
+        "seconds": 1.1
+      },
+      "corpus/dense": {
+        "hit@1": 0.0495,
+        "ev_recall@1": 0.03,
+        "hit@3": 0.1194,
+        "ev_recall@3": 0.0807,
+        "hit@5": 0.1509,
+        "ev_recall@5": 0.1049,
+        "hit@10": 0.2072,
+        "ev_recall@10": 0.1535,
+        "mrr@10": 0.0945,
+        "ndcg@10": 0.0948,
+        "seconds": 6.9
       }
     }
   },
