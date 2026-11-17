@@ -197,6 +197,32 @@
         "mrr@10": 0.0945,
         "ndcg@10": 0.0948,
         "seconds": 6.9
+      },
+      "corpus/hybrid": {
+        "hit@1": 0.0811,
+        "ev_recall@1": 0.0496,
+        "hit@3": 0.1622,
+        "ev_recall@3": 0.1123,
+        "hit@5": 0.2117,
+        "ev_recall@5": 0.149,
+        "hit@10": 0.2782,
+        "ev_recall@10": 0.2075,
+        "mrr@10": 0.1364,
+        "ndcg@10": 0.1326,
+        "seconds": 13.1
+      },
+      "corpus/hybrid_rerank": {
+        "hit@1": 0.1137,
+        "ev_recall@1": 0.0762,
+        "hit@3": 0.2173,
+        "ev_recall@3": 0.1529,
+        "hit@5": 0.2782,
+        "ev_recall@5": 0.2006,
+        "hit@10": 0.3311,
+        "ev_recall@10": 0.2547,
+        "mrr@10": 0.1787,
+        "ndcg@10": 0.1729,
+        "seconds": 303.0
       }
     }
   },
