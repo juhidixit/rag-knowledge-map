@@ -163,7 +163,10 @@ def main() -> None:
                 agg["seconds"] = round(time.perf_counter() - t, 1)
                 run[key] = agg
                 save()
-                print(f"  {scope:7s} {mode:14s} " + " ".join(f"{m}={agg[m]:.3f}" for m in ("hit@5", "mrr@10", "ndcg@10")), flush=True)
+                print(
+                    f"  {scope:7s} {mode:14s} " + " ".join(f"{m}={agg[m]:.3f}" for m in ("hit@5", "mrr@10", "ndcg@10")),
+                    flush=True,
+                )
 
     # Rerank depth sweep (quality vs latency) on the default chunker.
     lat_chunker = "section+header" if "section+header" in results["runs"] else args.chunkers.split(",")[-1]

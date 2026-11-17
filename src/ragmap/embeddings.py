@@ -27,7 +27,8 @@ class SentenceTransformerEmbedder:
 
         self.model = SentenceTransformer(model_name, device=device)
         self.model.max_seq_length = min(self.model.max_seq_length or 256, 256)
-        self.dim = self.model.get_sentence_embedding_dimension()
+        getdim = getattr(self.model, "get_embedding_dimension", None) or self.model.get_sentence_embedding_dimension
+        self.dim = getdim()
         self.name = model_name
 
     def encode(self, texts: list[str], batch_size: int = 64) -> np.ndarray:

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ragmap · document knowledge maps</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header>
+    <div class="brand"><span class="logo">◎</span> ragmap <span class="tag">document → knowledge map</span></div>
+    <div class="controls">
+      <select id="docSelect" aria-label="Document"></select>
+      <label class="btn primary" for="fileInput">Upload PDF</label>
+      <input id="fileInput" type="file" accept=".pdf,.txt,.md" hidden />
+    </div>
+  </header>
+
+  <main>
+    <section id="mapPane">
+      <div id="docTitle"></div>
+      <div id="stats"></div>
+      <svg id="graph" role="img" aria-label="Knowledge map"></svg>
+      <div id="legend"></div>
+      <div id="empty" class="empty">
+        <h2>Upload a PDF to map it</h2>
+        <p>ragmap extracts the key concepts, links the ones that appear together, groups them into topics,
+          and connects every node to the passages it came from.</p>
+      </div>
+      <div id="busy" class="busy hidden"><div class="spinner"></div><span>Reading, chunking and mapping…</span></div>
+    </section>
+
+    <aside id="side">
+      <form id="askForm" autocomplete="off">
+        <input id="query" placeholder="Ask this document a question…" />
+        <div class="row">
+          <select id="mode" aria-label="Retrieval mode">
+            <option value="hybrid_rerank">Hybrid + rerank</option>
+            <option value="hybrid">Hybrid (BM25 + dense, RRF)</option>
+            <option value="dense">Dense only</option>
+            <option value="bm25">BM25 only</option>
+          </select>
+          <button class="btn primary" type="submit">Ask</button>
+        </div>
+      </form>
+      <div id="answer"></div>
+      <div id="panel"><p class="hint">Click a concept on the map to see the passages behind it, or ask a question to light up the concepts that support the answer.</p></div>
+    </aside>
+  </main>
+
+  <script src="/static/d3.v7.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

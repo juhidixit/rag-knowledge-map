@@ -164,7 +164,9 @@ class PgVectorStore:
 # --------------------------------------------------------------------------------------
 # Fusion + reranking
 # --------------------------------------------------------------------------------------
-def rrf_fuse(rankings: Sequence[Sequence[int]], k: int = 60, weights: Sequence[float] | None = None) -> dict[int, float]:
+def rrf_fuse(
+    rankings: Sequence[Sequence[int]], k: int = 60, weights: Sequence[float] | None = None
+) -> dict[int, float]:
     """Reciprocal Rank Fusion: score(d) = sum_i w_i / (k + rank_i(d))."""
     weights = weights or [1.0] * len(rankings)
     fused: dict[int, float] = {}

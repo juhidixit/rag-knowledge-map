@@ -57,7 +57,11 @@ class Engine:
     def add_document(self, doc: Document, chunks: list[Chunk] | None = None) -> list[Chunk]:
         if doc.doc_id in self.docs:
             return self.doc_chunks(doc.doc_id)
-        chunks = chunks if chunks is not None else chunk_document(doc, self.config.chunking, max_words=self.config.chunk_words)
+        chunks = (
+            chunks
+            if chunks is not None
+            else chunk_document(doc, self.config.chunking, max_words=self.config.chunk_words)
+        )
         vectors = self.embedder.encode([c.index_text for c in chunks]) if chunks else None
         with self._lock:
             self.docs[doc.doc_id] = doc
@@ -146,6 +150,8 @@ class Engine:
                 ranked = sorted(zip(cand, ce.tolist(), strict=True), key=lambda x: -x[1])
                 timings["rerank_ms"] = (time.perf_counter() - t) * 1000
 
-        hits = [Hit(chunk=self.chunks[i], score=s, rank=r, scores=per.get(i, {})) for r, (i, s) in enumerate(ranked[:k], 1)]
+        hits = [
+            Hit(chunk=self.chunks[i], score=s, rank=r, scores=per.get(i, {})) for r, (i, s) in enumerate(ranked[:k], 1)
+        ]
         timings["total_ms"] = (time.perf_counter() - t0) * 1000
         return {"query": query, "mode": mode, "hits": hits, "timings": {k_: round(v, 2) for k_, v in timings.items()}}

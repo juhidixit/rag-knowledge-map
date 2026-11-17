@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+import unicodedata
 from collections import Counter
 from pathlib import Path
 
@@ -29,13 +30,14 @@ def doc_id_for(data: bytes) -> str:
 
 
 def _clean(text: str) -> str:
+    text = unicodedata.normalize("NFKC", text)  # ligatures (ﬁ -> fi), full-width chars
     text = re.sub(r"(\w)-\n(\w)", r"\1\2", text)  # de-hyphenate across line breaks
     text = text.replace("\n", " ")
     return re.sub(r"\s+", " ", text).strip()
 
 
 def parse_pdf(data: bytes, title: str | None = None, doc_id: str | None = None) -> Document:
-    import fitz  # PyMuPDF
+    import pymupdf as fitz
 
     pdf = fitz.open(stream=data, filetype="pdf")
     blocks: list[dict] = []  # {page, text, size, bold, y0, y1}

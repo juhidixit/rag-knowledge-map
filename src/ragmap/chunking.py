@@ -29,7 +29,9 @@ def _offsets(doc: Document) -> list[int]:
 
 
 def _mk(doc: Document, idx: int, text: str, section: str, page, ps: int, pe: int, header: bool, ws: int = 0) -> Chunk:
-    index_text = f"{doc.title} > {section}\n{text}" if header and section else (f"{doc.title}\n{text}" if header else text)
+    index_text = (
+        f"{doc.title} > {section}\n{text}" if header and section else (f"{doc.title}\n{text}" if header else text)
+    )
     return Chunk(
         chunk_id=f"{doc.doc_id}:{idx}",
         doc_id=doc.doc_id,
@@ -75,22 +77,54 @@ def chunk_paragraph(doc: Document, max_words: int = 200, min_words: int = 40) ->
         if len(w) > max_words:  # split very long paragraphs
             if buf:
                 q = doc.paragraphs[buf_start]
-                chunks.append(_mk(doc, len(chunks), " ".join(buf), q.section, q.page, buf_start, i, False, offs[buf_start]))
+                chunks.append(
+                    _mk(doc, len(chunks), " ".join(buf), q.section, q.page, buf_start, i, False, offs[buf_start])
+                )
                 buf = []
             for s in range(0, len(w), max_words):
-                chunks.append(_mk(doc, len(chunks), " ".join(w[s : s + max_words]), p.section, p.page, i, i + 1, False, offs[i] + s))
+                chunks.append(
+                    _mk(
+                        doc,
+                        len(chunks),
+                        " ".join(w[s : s + max_words]),
+                        p.section,
+                        p.page,
+                        i,
+                        i + 1,
+                        False,
+                        offs[i] + s,
+                    )
+                )
             buf_start = i + 1
             continue
+        if buf and len(buf) + len(w) > max_words:
+            q = doc.paragraphs[buf_start]
+            chunks.append(_mk(doc, len(chunks), " ".join(buf), q.section, q.page, buf_start, i, False, offs[buf_start]))
+            buf = []
         if not buf:
             buf_start = i
         buf.extend(w)
         if len(buf) >= min_words:
             q = doc.paragraphs[buf_start]
-            chunks.append(_mk(doc, len(chunks), " ".join(buf), q.section, q.page, buf_start, i + 1, False, offs[buf_start]))
+            chunks.append(
+                _mk(doc, len(chunks), " ".join(buf), q.section, q.page, buf_start, i + 1, False, offs[buf_start])
+            )
             buf = []
     if buf:
         q = doc.paragraphs[buf_start]
-        chunks.append(_mk(doc, len(chunks), " ".join(buf), q.section, q.page, buf_start, len(doc.paragraphs), False, offs[buf_start]))
+        chunks.append(
+            _mk(
+                doc,
+                len(chunks),
+                " ".join(buf),
+                q.section,
+                q.page,
+                buf_start,
+                len(doc.paragraphs),
+                False,
+                offs[buf_start],
+            )
+        )
     return chunks
 
 
@@ -105,7 +139,9 @@ def chunk_section(doc: Document, max_words: int = 200, header: bool = True) -> l
         nonlocal buf
         if buf:
             q = doc.paragraphs[buf_start]
-            chunks.append(_mk(doc, len(chunks), " ".join(buf), q.section, q.page, buf_start, end, header, offs[buf_start]))
+            chunks.append(
+                _mk(doc, len(chunks), " ".join(buf), q.section, q.page, buf_start, end, header, offs[buf_start])
+            )
         buf = []
 
     for i, p in enumerate(doc.paragraphs):
@@ -117,7 +153,19 @@ def chunk_section(doc: Document, max_words: int = 200, header: bool = True) -> l
         if len(w) > max_words:
             flush(i)
             for s in range(0, len(w), max_words):
-                chunks.append(_mk(doc, len(chunks), " ".join(w[s : s + max_words]), p.section, p.page, i, i + 1, header, offs[i] + s))
+                chunks.append(
+                    _mk(
+                        doc,
+                        len(chunks),
+                        " ".join(w[s : s + max_words]),
+                        p.section,
+                        p.page,
+                        i,
+                        i + 1,
+                        header,
+                        offs[i] + s,
+                    )
+                )
             buf_start = i + 1
             continue
         if not buf:
