@@ -22,6 +22,10 @@ from ragmap.knowledge_map import build_knowledge_map
 log = logging.getLogger("ragmap")
 STATIC = Path(__file__).parent / "static"
 MAX_UPLOAD_MB = int(os.environ.get("RAGMAP_MAX_UPLOAD_MB", "40"))
+# Public-demo hardening: cap user uploads per process (0 = unlimited) and show a notice in the UI.
+MAX_USER_DOCS = int(os.environ.get("RAGMAP_MAX_USER_DOCS", "0"))
+DEMO_NOTICE = os.environ.get("RAGMAP_DEMO_NOTICE", "")
+ABOUT_URL = os.environ.get("RAGMAP_ABOUT_URL", "")
 
 
 class SearchRequest(BaseModel):
@@ -45,6 +49,7 @@ def supporting_concepts(kmap: dict, hits, limit: int = 12) -> list[int]:
 
 def create_app(engine: Engine | None = None, preload: str | None = None) -> FastAPI:
     maps: dict[str, dict] = {}
+    uploaded: set[str] = set()  # doc_ids added through the upload endpoint (not preloaded)
 
     @asynccontextmanager
     async def lifespan(_app: FastAPI):
@@ -82,8 +87,19 @@ def create_app(engine: Engine | None = None, preload: str | None = None) -> Fast
         eng = get_engine()
         return {"status": "ok", "documents": len(eng.docs), "chunks": len(eng.chunks)}
 
+    @app.get("/api/config")
+    def config() -> dict:
+        return {
+            "notice": DEMO_NOTICE,
+            "max_upload_mb": MAX_UPLOAD_MB,
+            "max_user_docs": MAX_USER_DOCS,
+            "about_url": ABOUT_URL,
+        }
+
     @app.post("/api/documents")
     async def upload(file: UploadFile = File(...)) -> dict:
+        if MAX_USER_DOCS and len(uploaded) >= MAX_USER_DOCS:
+            raise HTTPException(429, f"This demo holds at most {MAX_USER_DOCS} uploaded documents until it restarts")
         data = await file.read()
         if len(data) > MAX_UPLOAD_MB * 1024 * 1024:
             raise HTTPException(413, f"File larger than {MAX_UPLOAD_MB} MB")
@@ -98,7 +114,11 @@ def create_app(engine: Engine | None = None, preload: str | None = None) -> Fast
         if not doc.paragraphs:
             raise HTTPException(422, "No text found in document")
         doc.meta["filename"] = name
-        return index_document(doc)
+        is_new = doc.doc_id not in get_engine().docs
+        kmap = index_document(doc)
+        if is_new:
+            uploaded.add(doc.doc_id)
+        return kmap
 
     @app.get("/api/documents")
     def list_documents() -> list[dict]:

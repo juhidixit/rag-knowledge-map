@@ -55,3 +55,5 @@ h3 { font-size: 15px; margin: 14px 0 8px; }
 .link.dim { stroke-opacity: .06; }
 .link.hot { stroke: var(--hit); stroke-opacity: .8; }
 @media (max-width: 900px) { main { grid-template-columns: 1fr; grid-template-rows: 60vh auto; } aside { border-left: 0; border-top: 1px solid var(--line); } }
+.notice { padding: 6px 18px; font-size: 13px; color: var(--muted); border-bottom: 1px solid var(--line); }
+.notice a { color: inherit; }

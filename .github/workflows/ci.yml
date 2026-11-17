@@ -25,8 +25,8 @@ jobs:
           python -m spacy download en_core_web_sm
       - name: Lint
         run: |
-          ruff check src tests eval scripts
-          ruff format --check src tests eval scripts
+          ruff check src tests eval scripts space
+          ruff format --check src tests eval scripts space
       - name: Test
         run: pytest -q
 

@@ -1,0 +1,59 @@
+name: Deploy Hugging Face Space
+
+on:
+  push:
+    branches: [main]
+    paths: ["space/**", "src/**", "scripts/deploy_space.py", "scripts/space_fetch_papers.py", ".github/workflows/deploy-space.yml"]
+  workflow_dispatch:
+    inputs:
+      measure:
+        description: "After deploying, restart the Space and measure cold start + warm query latency"
+        type: boolean
+        default: false
+
+concurrency:
+  group: deploy-space
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  SPACE_ID: juhidixit/ragmap-demo
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      HF_TOKEN: ${{ secrets.HF_TOKEN }}
+    steps:
+      - name: Check for HF_TOKEN
+        if: env.HF_TOKEN == ''
+        run: echo "::notice::HF_TOKEN secret is not set; skipping the Space deploy."
+      - uses: actions/checkout@v4
+        if: env.HF_TOKEN != ''
+      - uses: actions/setup-python@v5
+        if: env.HF_TOKEN != ''
+        with:
+          python-version: "3.12"
+      - name: Install deploy tools
+        if: env.HF_TOKEN != ''
+        run: pip install "huggingface_hub>=1.0"
+      - name: Fetch CC BY 4.0 demo papers from arXiv
+        if: env.HF_TOKEN != ''
+        run: python scripts/space_fetch_papers.py --n 3
+      - name: Upload to the Space
+        if: env.HF_TOKEN != ''
+        run: python scripts/deploy_space.py --space "$SPACE_ID"
+      - name: Measure cold start and warm latency
+        if: env.HF_TOKEN != '' && github.event_name == 'workflow_dispatch' && inputs.measure
+        run: |
+          python scripts/measure_space.py --space "$SPACE_ID" --cold --out results/space_latency.json
+          { echo '### Space latency'; echo '```json'; cat results/space_latency.json; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+      - name: Keep the measurement
+        if: env.HF_TOKEN != '' && github.event_name == 'workflow_dispatch' && inputs.measure
+        uses: actions/upload-artifact@v4
+        with:
+          name: space-latency
+          path: results/space_latency.json

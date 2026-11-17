@@ -147,14 +147,27 @@ Cells are MRR@10 / Hit@5, with the reranker scoring the top 20 here. The full ta
 | `GET` | `/api/documents/{id}/chunks?ids=a,b` | | passages with section, page and offsets |
 | `POST` | `/api/search` | `{query, k, mode, doc_ids, answer}` | ranked hits, per-stage timings, supporting concepts, optional cited answer |
 | `GET` | `/api/health` | | status and index sizes |
+| `GET` | `/api/config` | | demo notice and upload limits shown by the UI |
 
-Configuration is through environment variables: `RAGMAP_EMBED_MODEL`, `RAGMAP_RERANK_MODEL`, `RAGMAP_VECTOR_STORE=faiss|pgvector`, `RAGMAP_PG_DSN`, `RAGMAP_LLM_MODEL`, `RAGMAP_PRELOAD`.
+Configuration is through environment variables: `RAGMAP_EMBED_MODEL`, `RAGMAP_RERANK_MODEL`, `RAGMAP_VECTOR_STORE=faiss|pgvector`, `RAGMAP_PG_DSN`, `RAGMAP_LLM_MODEL`, `RAGMAP_PRELOAD`, `RAGMAP_DEVICE` (for example `cpu`). For a public instance: `RAGMAP_MAX_UPLOAD_MB`, `RAGMAP_MAX_USER_DOCS` (uploads allowed until restart, `0` = unlimited), `RAGMAP_DEMO_NOTICE` and `RAGMAP_ABOUT_URL`.
+
+## Public demo (Hugging Face Space)
+
+`space/` is the bundle for a free Hugging Face Space (Gradio SDK on ZeroGPU hardware; the app itself runs on CPU). `space/app.py` serves this same FastAPI app and d3 UI on port 7860, preloads a few papers, mounts a small About page at `/about`, and sets the public-demo limits: 10 MB uploads, at most 10 uploaded documents until restart, extractive answers only (no API key, so it cannot spend money).
+
+`.github/workflows/deploy-space.yml` deploys it on every push to `main` that touches `space/` or `src/`:
+
+1. `scripts/space_fetch_papers.py` reads candidate arXiv IDs from `space/papers.txt`, checks each paper's license in arXiv's metadata, and downloads the first three that are **CC BY 4.0**, with an attribution line for each. Papers under other licenses are skipped.
+2. `scripts/deploy_space.py` stages `space/` + `src/ragmap`, writes the attributions into the Space README, and uploads it with `huggingface_hub` using the `HF_TOKEN` repository secret.
+3. Run manually with **measure** ticked, `scripts/measure_space.py` restarts the Space, times the cold start, then times 30 warm queries per paper.
+
+Test the bundle locally with `python space/app.py` (needs `pip install gradio`).
 
 ## Tests
 
 ```bash
 pip install -e ".[dev,nlp]" && python -m spacy download en_core_web_sm
-pytest -q        # 28 tests; the unit and API tests use a hashing embedder, so no model download is needed
+pytest -q        # 33 tests; the unit and API tests use a hashing embedder, so no model download is needed
 ```
 
 CI runs ruff and pytest on Python 3.10 and 3.12. A second job runs the pgvector store against a real `pgvector/pgvector:pg16` service container and checks it against FAISS. The end-to-end tests build a real PDF in memory and check that headings and pages survive parsing.

@@ -166,4 +166,9 @@ $("#fileInput").addEventListener("change", async (e) => {
 });
 $("#docSelect").addEventListener("change", (e) => loadDoc(e.target.value));
 window.addEventListener("resize", () => state.map && renderGraph());
+api("/api/config").then((c) => {
+  if (!c.notice) return;
+  $("#notice").innerHTML = esc(c.notice) + (c.about_url ? ` <a href="${esc(c.about_url)}">About this demo and paper licenses</a>` : "");
+  $("#notice").classList.remove("hidden");
+}).catch(() => {});
 refreshDocs().catch(() => {});
