@@ -63,16 +63,16 @@ function renderGraph() {
     .on("click", (e, d) => selectConcept(d.id))
     .on("mouseenter", (e, d) => hover(d.id)).on("mouseleave", () => hover(null));
   nodeSel.append("circle").attr("r", (d) => r(d.score)).attr("fill", (d) => color(d.community));
-  const labelCut = d3.quantile(nodes.map((d) => d.score).sort(d3.ascending), 0.45);
+  const labelCut = d3.quantile(nodes.map((d) => d.score).sort(d3.ascending), 0.3);
   nodeSel.append("text").text((d) => d.label).attr("class", (d) => (d.score >= labelCut ? "" : "minor")).attr("x", (d) => r(d.score) + 3).attr("y", 4)
     .style("font-size", (d) => `${10 + 5 * Math.sqrt(d.score / maxScore)}px`);
   nodeSel.append("title").text((d) => `${d.label} · ${d.count} mentions · ${d.chunks.length} passages`);
 
   sim = d3.forceSimulation(nodes)
     .force("link", d3.forceLink(links).id((d) => d.id).distance((d) => 105 - 40 * d.weight).strength(0.25))
-    .force("charge", d3.forceManyBody().strength(-380))
-    .force("collide", d3.forceCollide().radius((d) => r(d.score) + 14))
-    .force("x", d3.forceX(width / 2).strength(0.045)).force("y", d3.forceY(height / 2 + 10).strength(0.07))
+    .force("charge", d3.forceManyBody().strength(-250))
+    .force("collide", d3.forceCollide().radius((d) => r(d.score) + 10))
+    .force("x", d3.forceX(width / 2).strength(0.06)).force("y", d3.forceY(height / 2 + 10).strength(0.09))
     .on("tick", () => {
       linkSel.attr("x1", (d) => d.source.x).attr("y1", (d) => d.source.y).attr("x2", (d) => d.target.x).attr("y2", (d) => d.target.y);
       nodeSel.attr("transform", (d) => `translate(${d.x},${d.y})`);
