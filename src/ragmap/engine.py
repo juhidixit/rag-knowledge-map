@@ -147,7 +147,11 @@ class Engine:
                 ce = self.reranker.score(query, [self.chunks[i].text for i in cand])
                 for i, s in zip(cand, ce, strict=True):
                     per[i]["rerank"] = round(float(s), 4)
-                ranked = sorted(zip(cand, ce.tolist(), strict=True), key=lambda x: -x[1])
+                reranked = sorted(zip(cand, ce.tolist(), strict=True), key=lambda x: -x[1])
+                # Candidates beyond the rerank depth keep their fused order below the reranked block.
+                floor = min(ce.tolist()) - 1.0
+                rest = [(i, floor - r) for r, (i, _) in enumerate(ranked[self.config.rerank_top :])]
+                ranked = reranked + rest
                 timings["rerank_ms"] = (time.perf_counter() - t) * 1000
 
         hits = [
