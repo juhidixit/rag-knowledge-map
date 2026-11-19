@@ -13,6 +13,8 @@ import numpy as np
 
 DEFAULT_EMBED_MODEL = os.environ.get("RAGMAP_EMBED_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
 DEFAULT_RERANK_MODEL = os.environ.get("RAGMAP_RERANK_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2")
+# Optional device override, e.g. RAGMAP_DEVICE=cpu on hosts that report a GPU the app should not use.
+DEFAULT_DEVICE = os.environ.get("RAGMAP_DEVICE") or None
 
 
 class Embedder(Protocol):
@@ -25,7 +27,7 @@ class SentenceTransformerEmbedder:
     def __init__(self, model_name: str = DEFAULT_EMBED_MODEL, device: str | None = None):
         from sentence_transformers import SentenceTransformer
 
-        self.model = SentenceTransformer(model_name, device=device)
+        self.model = SentenceTransformer(model_name, device=device or DEFAULT_DEVICE)
         self.model.max_seq_length = min(self.model.max_seq_length or 256, 256)
         getdim = getattr(self.model, "get_embedding_dimension", None) or self.model.get_sentence_embedding_dimension
         self.dim = getdim()

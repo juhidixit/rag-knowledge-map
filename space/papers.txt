@@ -1,0 +1,13 @@
+# Candidate arXiv papers for the demo library, in order of preference.
+# scripts/space_fetch_papers.py reads each paper's license from arXiv's metadata at deploy time
+# and keeps only the first 3 licensed CC BY 4.0. Anything else is skipped, never shipped.
+2404.16130  # From Local to Global: A Graph RAG Approach to Query-Focused Summarization
+2307.03172  # Lost in the Middle: How Language Models Use Long Contexts
+2401.18059  # RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval
+2310.11511  # Self-RAG
+2312.10997  # Retrieval-Augmented Generation for Large Language Models: A Survey
+2105.03011  # QASPER: information-seeking questions anchored in research papers
+2212.10496  # HyDE: Precise Zero-Shot Dense Retrieval without Relevance Labels
+2104.08663  # BEIR
+2112.09118  # Contriever
+2004.04906  # Dense Passage Retrieval

@@ -12,7 +12,7 @@ from collections.abc import Sequence
 import numpy as np
 from scipy import sparse
 
-from ragmap.embeddings import DEFAULT_RERANK_MODEL
+from ragmap.embeddings import DEFAULT_DEVICE, DEFAULT_RERANK_MODEL
 
 _TOKEN = re.compile(r"[a-z0-9]+(?:[-'][a-z0-9]+)*")
 try:
@@ -180,7 +180,7 @@ class CrossEncoderReranker:
     def __init__(self, model_name: str = DEFAULT_RERANK_MODEL, device: str | None = None, max_length: int = 256):
         from sentence_transformers import CrossEncoder
 
-        self.model = CrossEncoder(model_name, device=device, max_length=max_length)
+        self.model = CrossEncoder(model_name, device=device or DEFAULT_DEVICE, max_length=max_length)
         self.name = model_name
 
     def score(self, query: str, passages: Sequence[str], batch_size: int = 32) -> np.ndarray:

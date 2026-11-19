@@ -1,0 +1,19 @@
+# Installed by the Hugging Face Space build (Gradio SDK; gradio itself comes from sdk_version).
+# Mirrors the base + [models,nlp] dependencies in ../pyproject.toml. No [llm]: the demo never calls a paid API.
+# tests/test_space.py checks that this list stays in sync with pyproject.toml.
+numpy>=1.26
+scipy>=1.11
+scikit-learn>=1.4
+networkx>=3.2
+pymupdf>=1.24
+faiss-cpu>=1.8
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+pydantic>=2.6
+sentence-transformers>=3.0
+torch>=2.2
+spacy>=3.8,<3.9
+wordfreq>=3.0
+en_core_web_sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
+spaces
